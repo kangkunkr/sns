@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>강사 메이트 - AI 마케팅 자동 생성기</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #09f;
+            animation: spin 1s ease infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #output-container h2 { font-size: 1.5rem; font-weight: 700; margin-top: 1.5rem; margin-bottom: 0.75rem; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.5rem; }
+        #output-container h3 { font-size: 1.25rem; font-weight: 600; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+        #output-container p { margin-bottom: 1rem; line-height: 1.7; }
+        #output-container ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem; }
+        #output-container li { margin-bottom: 0.5rem; }
+        .output-tab-btn.active {
+            border-color: #3b82f6;
+            color: #3b82f6;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">🚀 강사 메이트</h1>
+            <p class="mt-2 text-gray-600">SNS, AI, 마케팅 강사님을 위한 맞춤형 AI 비서</p>
+        </header>
+
+        <main class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- 입력 폼 섹션 -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <form id="marketing-form">
+                    <!-- 1. 상품 기본 정보 -->
+                    <fieldset class="mb-6">
+                        <legend class="text-xl font-bold text-blue-600 border-b-2 border-blue-200 pb-2 mb-4 w-full">1. 상품 기본 정보</legend>
+                        <div class="space-y-4">
+                            <div><label for="product-name" class="block text-sm font-medium text-gray-700 mb-1">상품명</label><input type="text" id="product-name" class="w-full p-2 border border-gray-300 rounded-md" placeholder="예: 허니 라벤더 수제 비누" required></div>
+                            <div><label for="product-strengths" class="block text-sm font-medium text-gray-700 mb-1">상품의 강점 (키워드)</label><input type="text" id="product-strengths" class="w-full p-2 border border-gray-300 rounded-md" placeholder="예: #천연성분, #디자인패키지"></div>
+                            <div><label for="business-schedule" class="block text-sm font-medium text-gray-700 mb-1">비즈니스의 주요 일정</label><textarea id="business-schedule" rows="3" class="w-full p-2 border border-gray-300 rounded-md" placeholder="예: 12월 크리스마스 시즌 신제품 출시, 내년 3월 팝업스토어 오픈"></textarea></div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">마케팅 목표 (최대 2개 선택)</label>
+                                <div class="grid grid-cols-2 gap-x-4 gap-y-2 mt-2">
+                                    <label class="flex items-center"><input type="checkbox" name="marketing-goal" value="브랜드 인지도 상승" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"><span class="ml-2 text-sm">브랜드 인지도 상승</span></label>
+                                    <label class="flex items-center"><input type="checkbox" name="marketing-goal" value="신규 고객 확보" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"><span class="ml-2 text-sm">신규 고객 확보</span></label>
+                                    <label class="flex items-center"><input type="checkbox" name="marketing-goal" value="재구매율/충성도 증가" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"><span class="ml-2 text-sm">재구매율/충성도 증가</span></label>
+                                    <label class="flex items-center"><input type="checkbox" name="marketing-goal" value="웹사이트 트래픽 증가" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"><span class="ml-2 text-sm">웹사이트 트래픽 증가</span></label>
+                                    <label class="flex items-center"><input type="checkbox" name="marketing-goal" value="제품/서비스 판매 증진" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"><span class="ml-2 text-sm">제품/서비스 판매 증진</span></label>
+                                    <label class="flex items-center"><input type="checkbox" name="marketing-goal" value="잠재고객(리드) 확보" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"><span class="ml-2 text-sm">잠재고객(리드) 확보</span></label>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="gems-tone" class="block text-sm font-medium text-gray-700 mb-1">GEMS 지침서 어투 지정</label>
+                                <select id="gems-tone" class="w-full p-2 border border-gray-300 rounded-md">
+                                    <option value="친절하고 격려하는">친절하고 격려하는</option>
+                                    <option value="전문적이고 신뢰감 있는">전문적이고 신뢰감 있는</option>
+                                    <option value="재미있고 유쾌한">재미있고 유쾌한</option>
+                                    <option value="직설적이고 명료한">직설적이고 명료한</option>
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <!-- 2. 타겟 고객 설정 -->
+                    <fieldset class="mb-6">
+                        <legend class="text-xl font-bold text-blue-600 border-b-2 border-blue-200 pb-2 mb-4 w-full">2. 타겟 고객 설정 (페르소나)</legend>
+                        <div class="space-y-4">
+                            <div><label class="block text-sm font-medium text-gray-700 mb-1">인구 통계</label><div class="grid grid-cols-2 gap-4"><select id="target-age" class="w-full p-2 border border-gray-300 rounded-md"><option value="">연령대</option><option value="10대">10대</option><option value="20대 초반">20대 초반</option><option value="20대 후반 ~ 30대 초반">20대 후반 ~ 30대 초반</option><option value="30대 후반 ~ 40대 초반">30대 후반 ~ 40대 초반</option><option value="40대 이상">40대 이상</option></select><select id="target-gender" class="w-full p-2 border border-gray-300 rounded-md"><option value="">성별</option><option value="여성">여성</option><option value="남성">남성</option><option value="모두">모두</option></select></div></div>
+                            <div><label for="target-lifestyle" class="block text-sm font-medium text-gray-700 mb-1">라이프스타일 & 유저 특성 (키워드)</label><input type="text" id="target-lifestyle" class="w-full p-2 border border-gray-300 rounded-md" placeholder="예: #감성소품, #홈카페, #자기관리"></div>
+                        </div>
+                    </fieldset>
+                    <button type="submit" class="w-full mt-8 bg-blue-600 text-white font-bold py-3 px-4 rounded-md hover:bg-blue-700">기획서 & GEMS 지침서 동시 생성 🚀</button>
+                </form>
+            </div>
+
+            <!-- 결과 출력 섹션 -->
+            <div id="output-section" class="bg-white p-6 rounded-lg shadow-md lg:col-span-1">
+                <div id="loading-indicator" class="hidden justify-center items-center h-full">
+                    <div class="text-center"><div class="spinner mx-auto"></div><p class="mt-4 text-gray-600">AI가 분석 및 작성을 진행 중입니다...</p></div>
+                </div>
+                
+                <div id="output-container" class="prose max-w-none hidden">
+                    <!-- Output Tab Navigation -->
+                    <div class="mb-4 border-b border-gray-200">
+                        <nav class="-mb-px flex space-x-4 justify-between items-center" aria-label="Tabs">
+                            <div class="flex space-x-4">
+                                <button id="output-tab-planner-btn" class="output-tab-btn active whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                                    마케팅 기획서
+                                </button>
+                                <button id="output-tab-gems-btn" class="output-tab-btn whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                                    Gemini용 GEMS 지침서
+                                </button>
+                            </div>
+                            <button id="copy-gems-btn" class="hidden bg-purple-100 text-purple-700 font-bold py-1 px-3 rounded-md hover:bg-purple-200 text-sm">📋 지침서 복사</button>
+                        </nav>
+                    </div>
+
+                    <!-- Output Tab Content -->
+                    <div id="output-tab-planner-content"></div>
+                    <div id="output-tab-gems-content" class="hidden"></div>
+                </div>
+                
+                <div id="welcome-message" class="text-center flex flex-col justify-center items-center h-full text-gray-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mb-4" fill="none" viewBox="http://www.w3.org/2000/svg" class="h-16 w-16 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                    <h2 class="text-xl font-semibold">결과물이 여기에 생성됩니다.</h2>
+                    <p class="mt-2">왼쪽 폼에 정보를 입력하고 '생성하기' 버튼을 눌러주세요.</p>
+                </div>
+                
+                <button id="download-btn" class="hidden w-full mt-4 bg-gray-700 text-white font-bold py-2 px-4 rounded-md hover:bg-gray-800">📄 기획서 다운로드 (.md)</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const API_KEY = "AIzaSyA9bYqzolO-V_UHa88ZMI06BMNHPimQd8c"; 
+
+        const form = document.getElementById('marketing-form');
+        const outputContainer = document.getElementById('output-container');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const welcomeMessage = document.getElementById('welcome-message');
+        const downloadBtn = document.getElementById('download-btn');
+        let plannerRawMarkdown = '';
+        let gemsRawMarkdown = '';
+
+        // Output Tab Elements
+        const outputTabPlannerBtn = document.getElementById('output-tab-planner-btn');
+        const outputTabGemsBtn = document.getElementById('output-tab-gems-btn');
+        const outputTabPlannerContent = document.getElementById('output-tab-planner-content');
+        const outputTabGemsContent = document.getElementById('output-tab-gems-content');
+        const copyGemsBtn = document.getElementById('copy-gems-btn');
+
+        outputTabPlannerBtn.addEventListener('click', () => {
+            outputTabPlannerContent.classList.remove('hidden');
+            outputTabGemsContent.classList.add('hidden');
+            outputTabPlannerBtn.classList.add('active');
+            outputTabGemsBtn.classList.remove('active');
+            copyGemsBtn.classList.add('hidden');
+            downloadBtn.classList.remove('hidden');
+        });
+
+        outputTabGemsBtn.addEventListener('click', () => {
+            outputTabGemsContent.classList.remove('hidden');
+            outputTabPlannerContent.classList.add('hidden');
+            outputTabGemsBtn.classList.add('active');
+            outputTabPlannerBtn.classList.remove('active');
+            copyGemsBtn.classList.remove('hidden');
+            downloadBtn.classList.add('hidden');
+        });
+        
+        const goalCheckboxes = document.querySelectorAll('input[name="marketing-goal"]');
+        goalCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                const checkedCount = document.querySelectorAll('input[name="marketing-goal"]:checked').length;
+                if (checkedCount > 2) {
+                    checkbox.checked = false;
+                }
+            });
+        });
+
+        async function generateContent(prompt, filenameBase) {
+            welcomeMessage.style.display = 'none';
+            outputContainer.classList.add('hidden');
+            outputTabPlannerContent.innerHTML = '';
+            outputTabGemsContent.innerHTML = '';
+            loadingIndicator.style.display = 'flex';
+            downloadBtn.classList.add('hidden');
+            copyGemsBtn.classList.add('hidden');
+            plannerRawMarkdown = '';
+            gemsRawMarkdown = '';
+
+
+            try {
+                if (API_KEY === "") {
+                    throw new Error('죄송합니다. 현재 서비스에 연결된 API 키가 없습니다. 관리자에게 문의해주세요.');
+                }
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
+                
+                const payload = { contents: [{ parts: [{ text: prompt }] }] };
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    let errorDetails = `API Error: ${response.status} ${response.statusText}`;
+                    try { const errorData = await response.json(); if (errorData.error && errorData.error.message) { errorDetails = errorData.error.message; } } catch (e) {}
+                    throw new Error(errorDetails);
+                }
+
+                const result = await response.json();
+                const candidate = result.candidates?.[0];
+
+                if (candidate && candidate.content?.parts?.[0]?.text) {
+                    const generatedText = candidate.content.parts[0].text;
+                    
+                    const separator = '---[GEMS_GUIDE_START]---';
+                    const parts = generatedText.split(separator);
+                    
+                    plannerRawMarkdown = parts[0] || "마케팅 기획서를 생성하지 못했습니다.";
+                    gemsRawMarkdown = parts[1] || "GEMS 지침서를 생성하지 못했습니다.";
+                    
+                    outputTabPlannerContent.innerHTML = marked.parse(plannerRawMarkdown);
+                    outputTabGemsContent.innerHTML = marked.parse(gemsRawMarkdown);
+                    
+                    // Show the results
+                    outputContainer.classList.remove('hidden');
+                    outputTabPlannerBtn.click(); // Default to planner tab
+                } else {
+                     let errorMessage = "API 응답에서 콘텐츠를 찾을 수 없습니다.";
+                       if(candidate && candidate.finishReason && candidate.finishReason !== "STOP") {
+                         errorMessage = `AI가 응답 생성을 완료하지 못했습니다. (이유: ${candidate.finishReason})`;
+                       }
+                       throw new Error(errorMessage);
+                }
+            } catch (error) {
+                console.error("자세한 오류 정보:", error);
+                welcomeMessage.style.display = 'flex';
+                welcomeMessage.innerHTML = `<div class="text-red-500 text-center"><p>죄송합니다. 생성 중 오류가 발생했습니다.</p><p class="text-sm mt-2 font-bold">[오류 원인]</p><p class="text-sm mt-1 bg-red-50 p-2 rounded">${error.message}</p></div>`;
+            } finally {
+                loadingIndicator.style.display = 'none';
+            }
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const checkedGoals = Array.from(document.querySelectorAll('input[name="marketing-goal"]:checked')).map(cb => cb.value);
+
+            const formData = {
+                productName: document.getElementById('product-name').value,
+                productStrengths: document.getElementById('product-strengths').value,
+                businessSchedule: document.getElementById('business-schedule').value,
+                marketingGoal: checkedGoals.length > 0 ? checkedGoals.join(', ') : '지정되지 않음',
+                gemsTone: document.getElementById('gems-tone').value,
+                targetAge: document.getElementById('target-age').value,
+                targetGender: document.getElementById('target-gender').value,
+                targetLifestyle: document.getElementById('target-lifestyle').value,
+            };
+
+            const finalPrompt = `
+                당신은 최고의 마케팅 전략가이자, 수강생을 위한 친절한 AI 가이드 작성 전문가입니다.
+                다음 정보를 바탕으로 **[마케팅 기획서]**와 **[Gemini용 GEMS 지침서]**를 순서대로 작성해 주세요.
+                두 결과물 사이에는 반드시 다음 구분자를 삽입해 주세요: ---[GEMS_GUIDE_START]---
+
+                ### **[사용자 입력 정보]**
+                - 상품명: ${formData.productName}
+                - 강점: ${formData.productStrengths}
+                - 마케팅 목표: ${formData.marketingGoal}
+                - 비즈니스 주요 일정: ${formData.businessSchedule}
+                - GEMS 어투: ${formData.gemsTone}
+                - 타겟 고객: ${formData.targetAge} ${formData.targetGender}
+                - 고객 라이프스타일: ${formData.targetLifestyle}
+                
+                ---
+                
+                ### **[AI 수행 과제 1: 마케팅 기획서 작성]**
+                아래 목차에 따라 상세하고 전문적인 마케팅 기획서를 Markdown 형식으로 작성해 주세요.
+                - ## 📝 마케팅 기획서: ${formData.productName}
+                - ### 1. 시장 및 경쟁 환경 분석
+                    - (상품 관련 시장 트렌드와 경쟁사 2곳 분석, 차별화 포인트 제안)
+                - ### 2. 타겟 고객 분석
+                    - (입력된 페르소나 기반으로 고객이 느낄 기능적/정서적 메리트 도출)
+                - ### 3. 포지셔닝 및 컨셉
+                    - (모든 정보를 종합하여 핵심 컨셉 또는 슬로건을 5가지 제안해주세요)
+                - ### 4. SNS 마케팅 액션 아이디어
+                    - (기획서 내용을 바탕으로 인스타그램, 블로그 등 채널별 콘텐츠 아이디어 2개씩 제안)
+
+                ---[GEMS_GUIDE_START]---
+
+                ### **[AI 수행 과제 2: Gemini용 GEMS 지침서 작성]**
+                위 **[사용자 입력 정보]**를 바탕으로, 수강생이 자신의 Gemini(Gems)의 '지침(Instructions)'에 그대로 복사해서 붙여넣을 수 있는 **완성된 GEMS 지침서**를 Markdown 형식으로 작성해 주세요. 이 지침서는 강사님이 요청한 아래 항목들을 중심으로 Gemini가 작동하도록 만들어져야 합니다.
+                
+                - ## Gemini를 위한 맞춤형 GEMS 지침서 📋
+                - ### **❗ 당신이 반드시 기억해야 할 3가지 핵심 포인트**
+                - 1. **비즈니스 목표 달성:** 모든 아이디어는 우리의 핵심 목표인 **'${formData.marketingGoal}'**에 기여해야 합니다.
+                - 2. **시의성 확보:** 다가오는 **주요 기념일**(명절, 어버이날, 크리스마스 등)과 우리의 주요 일정(**'${formData.businessSchedule || '특별한 일정 없음'}'**)을 항상 고려하여 시기적절한 마케팅 아이디어를 제안해주세요.
+                - 3. **문제 해결:** 우리 페르소나가 겪는 문제점을 파악하고, '${formData.productName}' 상품이 어떻게 그 문제를 해결해 줄 수 있는지에 집중하여 솔루션을 제공하는 관점으로 접근해주세요.
+
+                - ### **1. 페르소나 정의 및 역할 부여 (Persona Definition & Role Assignment)**
+                    - **[핵심 페르소나]** 당신이 공략해야 할 핵심 고객 페르소나는 **'${formData.targetAge} ${formData.targetGender}'**이며, **'${formData.targetLifestyle}'**와 같은 라이프스타일을 가지고 있습니다. 이들은 '${formData.productName}' 상품의 **'${formData.productStrengths}'**와 같은 강점에 매력을 느낄 가능성이 높습니다.
+                    - **[역할]** 당신은 이 페르소나의 가장 친한 친구이자 최고의 조언가입니다. 항상 이 페르소나의 입장에서 생각하고, 그들의 고민을 해결해주며, 그들이 좋아할 만한 방식으로 대화하고 아이디어를 제안해야 합니다.
+                    - **[명령어]** 제가 '페르소나 시점'이라고 말하면, 이 페르소나에 빙의해서 '${formData.productName}' 상품에 대해 어떻게 생각하는지 1인칭 시점으로 이야기해주세요.
+
+                - ### **2. 이벤트 기획 (Event Planning)**
+                    - 제가 '이벤트 기획'을 요청하면, 위에서 정의된 핵심 페르소나가 열광적으로 참여할 만한 창의적인 SNS 이벤트를 5가지 이상 제안해주세요. (참여 방법, 경품 아이디어 포함)
+
+                - ### **3. 콘텐츠 기획 (Content Planning)**
+                    - 제가 '콘텐츠 기획'을 요청하면, 상품의 핵심 강점(${formData.productStrengths})을 어필할 수 있는 SNS 콘텐츠 아이디어를 5가지 이상 제안해주세요. (인스타그램 릴스, 블로그 포스팅 등 채널과 형식 포함)
+
+                - ### **4. 팔로워 발굴 (Follower Discovery)**
+                    - 제가 '팔로워 발굴'을 요청하면, 우리 상품과 관련된 잠재 고객을 찾을 수 있는 최신 트렌드 키워드와 해시태그를 10가지 이상 추천해주세요.
+
+                - ### **5. 영상 프롬프트 추천 (Video Prompt Recommendation)**
+                    - 제가 '영상 프롬프트'와 함께 영상 주제와 스타일을 알려주면, AI 영상 생성에 활용할 수 있는 상세한 프롬프트 5가지를 한국어와 영어로 제안해주세요.
+
+                - ### **6. 지침서 업데이트 (Instruction Update)**
+                    - 제가 '지침서 업데이트'와 함께 수정할 내용을 알려주면, 이 GEMS 지침서의 내용을 더 효과적으로 개선하여 새로운 버전의 지침서를 만들어주세요.
+                
+                - ### **공통 규칙**
+                    - 모든 답변은 **'${formData.gemsTone}'** 톤앤매너를 유지하고, 항상 우리의 핵심 타겟 고객의 입장에서 생각해주세요.
+            `;
+            generateContent(finalPrompt, formData.productName);
+        });
+
+        downloadBtn.addEventListener('click', () => {
+            if (!plannerRawMarkdown) { return; }
+            const productName = document.getElementById('product-name').value || '결과물';
+            const filename = `${productName}_기획서.md`;
+            const blob = new Blob([plannerRawMarkdown], { type: 'text/markdown;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
+        });
+
+        copyGemsBtn.addEventListener('click', () => {
+            if (!gemsRawMarkdown) { return; }
+            const textarea = document.createElement('textarea');
+            textarea.value = gemsRawMarkdown;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                copyGemsBtn.textContent = '✅ 복사 완료!';
+                setTimeout(() => {
+                    copyGemsBtn.textContent = '📋 지침서 복사';
+                }, 2000);
+            } catch (err) {
+                console.error('클립보드 복사 실패:', err);
+                copyGemsBtn.textContent = '❌ 복사 실패';
+                setTimeout(() => {
+                    copyGemsBtn.textContent = '📋 지침서 복사';
+                }, 2000);
+            }
+            document.body.removeChild(textarea);
+        });
+    </script>
+</body>
+</html>
+
