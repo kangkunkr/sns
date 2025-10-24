@@ -14,12 +14,22 @@
         p { margin-bottom: 1rem; line-height: 1.7; }
         strong { font-weight: 600; }
         ol { list-style-type: decimal; margin-left: 1.5rem; margin-bottom: 1rem; }
+        ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem; } /* 추가 */
         li { margin-bottom: 0.5rem; }
         table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
-        th, td { border: 1px solid #d1d5db; padding: 0.75rem; text-align: left; }
+        th, td { border: 1px solid #d1d5db; padding: 0.75rem; text-align: left; vertical-align: top; } /* vertical-align 추가 */
         th { background-color: #f3f4f6; font-weight: 600; }
         hr { border-top: 1px solid #e5e7eb; margin-top: 2rem; margin-bottom: 2rem; }
         code { background-color: #f3f4f6; padding: 0.2em 0.4em; border-radius: 0.25rem; font-size: 0.9em; }
+        /* 프롬프트 예시 스타일 */
+        .prompt-example {
+            background-color: #f9fafb;
+            border-left: 4px solid #60a5fa;
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: #4b5563;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 p-8">
@@ -35,14 +45,14 @@
 
         <ol>
             <li><strong>복사하기:</strong> 'SNS 마케팅 메이트' 결과 화면에서 <strong>[Gemini용 GEMS 지침서]</strong> 탭을 선택하고, <strong>[📋 지침서 복사]</strong> 버튼을 누르세요.</li>
-            <li><strong>붙여넣기:</strong> 여러분의 Gemini (Gems) 화면 왼쪽 아래에 있는 <strong>'지침(Instructions)'</strong> 입력 칸에 복사한 내용을 그대로 <strong>붙여넣으세요.</strong></li>
+            <li><strong>붙여넣기:</strong> 여러분의 Gemini (Gems) 화면 왼쪽 아래에 있는 <strong>'지침(Instructions)'</strong> 입력 칸에 복사한 내용을 그대로 <strong>붙여넣으세요.</strong> (기존 내용이 있다면 덮어씁니다.)</li>
             <li><strong>저장하기:</strong> <strong>[저장]</strong> 버튼을 누르면 설정 완료! 이제 여러분만의 맞춤형 마케팅 비서가 준비되었습니다.</li>
         </ol>
-        <p></p>
+        <p>[Gemini 지침 입력 영역 이미지]</p>
 
         <h2>✨ GEMS 지침서, 어떤 기능들이 있나요?</h2>
 
-        <p>이제부터 여러분은 아래의 <strong>명령어</strong>들을 사용하여 Gemini에게 다양한 마케팅 작업을 요청할 수 있습니다. 마치 사람에게 시키듯 자연스럽게 질문하거나 요청해보세요!</p>
+        <p>이제부터 여러분은 아래 표에 있는 <strong>명령어</strong>들을 사용하여 Gemini에게 다양한 마케팅 작업을 요청할 수 있습니다. 마치 사람에게 시키듯 자연스럽게 질문하거나 요청해보세요!</p>
 
         <hr>
 
@@ -88,7 +98,13 @@
                     <td>3</td>
                     <td>콘텐츠 기획</td>
                     <td><code>"콘텐츠 기획"</code></td>
-                    <td>상품 강점과 가치를 담은 SNS 콘텐츠 아이디어를 5가지 이상 제안합니다. (릴스, 블로그 등 형식 포함)</td>
+                    <td>
+                        상품 강점과 가치를 담은 SNS 콘텐츠 아이디어를 **5가지** 제안합니다. 각 아이디어는 아래 형식을 따릅니다:<br>
+                        <strong>- 콘텐츠 제목:</strong><br>
+                        <strong>- 내용 요약:</strong><br>
+                        <strong>- 실행 프롬프트:</strong> (이 내용을 Gemini에게 요청하면 바로 콘텐츠 초안을 얻을 수 있는 구체적인 명령어)
+                        <div class="prompt-example"><strong>예시 실행 프롬프트:</strong> "인스타그램 글 작성: '[콘텐츠 제목]'이라는 주제로, '[내용 요약]'을 바탕으로 감성적인 캡션과 해시태그 5개를 만들어줘."</div>
+                    </td>
                 </tr>
                 <tr>
                     <td>4</td>
@@ -136,7 +152,10 @@
                     <td>11</td>
                     <td>이미지 기반 판매 글</td>
                     <td><code>[사진] + [제품 이름] + "판매 글"</code></td>
-                    <td>사진을 분석하여 인스타그램용(&lt;제목&gt;,&lt;캡션&gt;,&lt;해시태그&gt;)과 블로그용(&lt;제목&gt;~&lt;결론&gt;,&lt;해시태그&gt;) 글을 구어체로 작성합니다.</td>
+                    <td>
+                        사진을 분석하여 인스타그램용(&lt;제목&gt;,&lt;캡션&gt;,&lt;해시태그&gt;)과 블로그용(&lt;제목&gt;~&lt;결론&gt;,&lt;해시태그&gt;) 글을 구어체로 작성합니다.<br>
+                        (글에는 **고객 혜택 강조, 문제점 해결** 내용과 **CTA(Call To Action)** 문구를 자연스럽게 포함)
+                    </td>
                 </tr>
                 <tr>
                     <td>12</td>
@@ -146,98 +165,5 @@
                 </tr>
                 <tr>
                     <td>13</td>
-                    <td>카드뉴스 기획</td>
-                    <td><code>"카드뉴스 기획" + [주제]</code></td>
-                    <td>4~5장 분량의 상세 카드뉴스 기획안을 제안합니다. (제목, 각 장 문구/컨셉, 흐름, 행동 유도 포함)</td>
-                </tr>
-                <tr>
-                    <td>14</td>
-                    <td>릴스 기획</td>
-                    <td><code>"릴스 기획" + [주제 또는 내용]</code></td>
-                    <td>15~30초 분량의 상세 릴스 기획안을 제안합니다. (후킹, 장면 구성, 행동 유도, 음악 키워드, 해시태그 포함)</td>
-                </tr>
-                <tr>
-                    <td>15</td>
-                    <td>블로그 글 작성</td>
-                    <td><code>"블로그 글" + [주제]</code> OR <code>[사진] + "블로그"</code></td>
-                    <td>&lt;제목&gt;~&lt;결론&gt; 구조를 갖춘 블로그 글 초안과 해시태그 5개 이상을 자연스러운 구어체로 작성합니다.</td>
-                </tr>
-                <tr>
-                    <td>16</td>
-                    <td>광고 문구 생성</td>
-                    <td><code>"광고 문구"</code></td>
-                    <td>SNS 광고용 짧고 강력한 광고 문구 3가지 버전을 제안합니다. (후킹 포인트, 핵심 가치 포함)</td>
-                </tr>
-                 <tr>
-                    <td>17</td>
-                    <td>콘텐츠 캘린더 아이디어</td>
-                    <td><code>"콘텐츠 캘린더" + [기간]</code> (예: <code>콘텐츠 캘린더 다음 주</code>)</td>
-                    <td>해당 기간 동안 발행할 콘텐츠 주제 5가지 이상을 제안합니다. (핵심 포인트 고려)</td>
-                </tr>
-                <tr>
-                    <td>18</td>
-                    <td>답글 추천</td>
-                    <td><code>"답글" + [댓글/리뷰 내용]</code></td>
-                    <td>댓글/리뷰 뉘앙스에 맞는 공감과 감사의 답글 3가지 버전을 제안합니다.</td>
-                </tr>
-                 <tr>
-                    <td>19</td>
-                    <td>프로필 피드백</td>
-                    <td><code>"프로필 피드백" + [프로필 정보 또는 이미지 설명]</code></td>
-                    <td>현재 SNS 프로필의 개선점을 3가지 이상 구체적으로 제안합니다.</td>
-                </tr>
-                <tr>
-                    <td>20</td>
-                    <td>경쟁사 분석</td>
-                    <td><code>"경쟁사 분석" + [경쟁사 스토어 캡처 이미지 또는 설명]</code></td>
-                    <td>경쟁사 강/약점 분석 및 우리 비즈니스만의 차별화 실행 전략 3가지 이상을 제안합니다.</td>
-                </tr>
-                <tr>
-                    <td>21</td>
-                    <td>스마트스토어 상세페이지</td>
-                    <td><code>"상세페이지" + [상품 특징 요약]</code></td>
-                    <td>구매 유도 스마트스토어 상세 페이지 문구를 작성합니다. (소제목 포함, SEO 고려)</td>
-                </tr>
-                <tr>
-                    <td>22</td>
-                    <td>스마트스토어 문의 답변</td>
-                    <td><code>"문의 답변" + [문의 유형]</code></td>
-                    <td>자주 묻는 문의 유형별 답변 템플릿 2~3가지를 제안합니다.</td>
-                </tr>
-                 <tr>
-                    <td>23</td>
-                    <td>스마트스토어 리뷰 요청</td>
-                    <td><code>"리뷰 요청"</code></td>
-                    <td>구매 고객에게 보낼 정중하고 효과적인 리뷰 요청 메시지 2~3가지 버전을 제안합니다.</td>
-                </tr>
-                <tr>
-                    <td>24</td>
-                    <td>스마트스토어 공지사항</td>
-                    <td><code>"공지사항" + [공지 내용]</code></td>
-                    <td>스마트스토어 공지사항 문구를 간결하고 명확하게 작성합니다.</td>
-                </tr>
-                 <tr>
-                    <td>25</td>
-                    <td>스마트스토어 기획전 아이디어</td>
-                    <td><code>"기획전 아이디어" + [시즌 또는 주제]</code></td>
-                    <td>시즌/주제별 기획전 테마와 대표 상품 구성 아이디어 3가지 이상을 제안합니다.</td>
-                </tr>
-                <tr>
-                    <td>26</td>
-                    <td>지침서 업데이트</td>
-                    <td><code>"지침서 업데이트" + [수정할 내용]</code></td>
-                    <td>현재 GEMS 지침서를 더 효과적으로 개선하여 새로운 버전의 지침서를 만들어줍니다.</td>
-                </tr>
-            </tbody>
-        </table>
+                    <td>카드뉴스
 
-        <hr>
-
-        <h2>🚀 이제 시작해보세요!</h2>
-
-        <p>이 가이드와 GEMS 지침서가 여러분의 SNS 마케팅 여정에 든든한 동반자가 되기를 바랍니다. 처음에는 낯설 수 있지만, 자꾸 사용해보면서 여러분만의 노하우를 만들어나가세요. 궁금한 점이 있다면 언제든 다시 질문해주세요!</p>
-
-    </div>
-
-</body>
-</html>
