@@ -41,7 +41,7 @@
             <h1 class="text-3xl md:text-4xl font-bold text-gray-900">🚀 SNS 마케팅 메이트</h1>
             <p class="mt-2 text-gray-600">AI가 만드는 맞춤형 SNS 마케팅 기획서 & 지침서</p>
             <!-- 설명서 링크 추가 -->
-            <p class="mt-4"><a href="gems_mn.html" target="_blank" class="text-sm text-blue-600 hover:underline">📘 사용 설명서 보기 (HTML)</a></p>
+            <p class="mt-4"><a href="gems_manual.html" target="_blank" class="text-sm text-blue-600 hover:underline">📘 사용 설명서 보기 (HTML)</a></p>
         </header>
 
         <main class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -84,25 +84,29 @@
                         <legend class="text-xl font-bold text-blue-600 border-b-2 border-blue-200 pb-2 mb-4 w-full">2. 우리의 고객은 누구일까요?</legend>
                         <div class="space-y-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">인구 통계</label>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <select id="target-age" class="w-full p-2 border border-gray-300 rounded-md">
-                                        <option value="">연령대</option>
-                                        <option value="10대">10대</option>
-                                        <option value="20대 초반">20대 초반</option>
-                                        <option value="20대 후반 ~ 30대 초반">20대 후반 ~ 30대 초반</option>
-                                        <option value="30대 후반 ~ 40대 초반">30대 후반 ~ 40대 초반</option>
-                                        <option value="40대 후반 ~ 50대 초반">40대 후반 ~ 50대 초반</option>
-                                        <option value="50대 후반 ~ 60대 초반">50대 후반 ~ 60대 초반</option>
-                                        <option value="60대 이상">60대 이상</option>
-                                    </select>
-                                    <select id="target-gender" class="w-full p-2 border border-gray-300 rounded-md">
-                                        <option value="">성별</option>
-                                        <option value="여성">여성</option>
-                                        <option value="남성">남성</option>
-                                        <option value="모두">모두</option>
-                                    </select>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">연령대 (최대 2개 선택)</label>
+                                <div class="grid grid-cols-3 gap-x-4 gap-y-2 mt-2">
+                                    <label class="flex items-center"><input type="checkbox" name="target-age" value="10대" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"><span class="ml-2 text-sm">10대</span></label>
+                                    <label class="flex items-center"><input type="checkbox" name="target-age" value="20-24세" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"><span class="ml-2 text-sm">20-24세</span></label>
+                                    <label class="flex items-center"><input type="checkbox" name="target-age" value="25-29세" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"><span class="ml-2 text-sm">25-29세</span></label>
+                                    <label class="flex items-center"><input type="checkbox" name="target-age" value="30-34세" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"><span class="ml-2 text-sm">30-34세</span></label>
+                                    <label class="flex items-center"><input type="checkbox" name="target-age" value="35-39세" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"><span class="ml-2 text-sm">35-39세</span></label>
+                                    <label class="flex items-center"><input type="checkbox" name="target-age" value="40-44세" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"><span class="ml-2 text-sm">40-44세</span></label>
+                                    <label class="flex items-center"><input type="checkbox" name="target-age" value="45-49세" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"><span class="ml-2 text-sm">45-49세</span></label>
+                                    <label class="flex items-center"><input type="checkbox" name="target-age" value="50-54세" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"><span class="ml-2 text-sm">50-54세</span></label>
+                                    <label class="flex items-center"><input type="checkbox" name="target-age" value="55-59세" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"><span class="ml-2 text-sm">55-59세</span></label>
+                                    <label class="flex items-center"><input type="checkbox" name="target-age" value="60-64세" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"><span class="ml-2 text-sm">60-64세</span></label>
+                                    <label class="flex items-center"><input type="checkbox" name="target-age" value="65세 이상" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"><span class="ml-2 text-sm">65세 이상</span></label>
                                 </div>
+                            </div>
+                             <div>
+                                <label for="target-gender" class="block text-sm font-medium text-gray-700 mb-1">성별</label>
+                                <select id="target-gender" class="w-full p-2 border border-gray-300 rounded-md">
+                                    <option value="">성별 선택</option>
+                                    <option value="여성">여성</option>
+                                    <option value="남성">남성</option>
+                                    <option value="모두">모두</option>
+                                </select>
                             </div>
                             <div><label for="target-lifestyle" class="block text-sm font-medium text-gray-700 mb-1">생활 모습 & 특징 (키워드)</label><input type="text" id="target-lifestyle" class="w-full p-2 border border-gray-300 rounded-md" placeholder="예: #감성소품, #홈카페, #자기관리"></div>
                         </div>
@@ -152,7 +156,7 @@
     </div>
 
     <script>
-        const API_KEY = "AIzaSyA9bYqzolO-V_UHa88ZMI06BMNHPimQd8c"; 
+        const API_KEY = ""; 
 
         const form = document.getElementById('marketing-form');
         const outputContainer = document.getElementById('output-container');
@@ -183,7 +187,7 @@
                 businessSchedule: document.getElementById('business-schedule').value,
                 marketingGoal: Array.from(document.querySelectorAll('input[name="marketing-goal"]:checked')).map(cb => cb.value),
                 gemsTone: Array.from(document.querySelectorAll('input[name="gems-tone"]:checked')).map(cb => cb.value),
-                targetAge: document.getElementById('target-age').value,
+                targetAge: Array.from(document.querySelectorAll('input[name="target-age"]:checked')).map(cb => cb.value), // 체크박스로 변경
                 targetGender: document.getElementById('target-gender').value,
                 targetLifestyle: document.getElementById('target-lifestyle').value,
             };
@@ -202,7 +206,6 @@
                     document.getElementById('brand-name').value = formData.brandName || '';
                     document.getElementById('product-strengths').value = formData.productStrengths || '';
                     document.getElementById('business-schedule').value = formData.businessSchedule || '';
-                    document.getElementById('target-age').value = formData.targetAge || '';
                     document.getElementById('target-gender').value = formData.targetGender || '';
                     document.getElementById('target-lifestyle').value = formData.targetLifestyle || '';
 
@@ -215,6 +218,12 @@
                     document.querySelectorAll('input[name="gems-tone"]').forEach(checkbox => {
                         checkbox.checked = formData.gemsTone?.includes(checkbox.value) || false;
                     });
+                    
+                    // 연령대 체크박스 복원
+                     document.querySelectorAll('input[name="target-age"]').forEach(checkbox => {
+                        checkbox.checked = formData.targetAge?.includes(checkbox.value) || false;
+                    });
+
                 } catch (e) {
                     console.error("Error parsing saved form data:", e);
                     localStorage.removeItem(FORM_DATA_KEY); // 잘못된 데이터 삭제
@@ -272,14 +281,26 @@
             }
         });
         
+        // 마케팅 목표 체크박스 2개 제한
         const goalCheckboxes = document.querySelectorAll('input[name="marketing-goal"]');
         goalCheckboxes.forEach(checkbox => {
             checkbox.addEventListener('change', () => {
                 const checkedCount = document.querySelectorAll('input[name="marketing-goal"]:checked').length;
                 if (checkedCount > 2) {
                     checkbox.checked = false;
-                    // 자동 저장 함수 다시 호출하여 변경사항 즉시 반영
-                    saveFormData();
+                    saveFormData(); // 변경사항 저장
+                }
+            });
+        });
+
+        // 연령대 체크박스 2개 제한
+        const ageCheckboxes = document.querySelectorAll('input[name="target-age"]');
+        ageCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                const checkedCount = document.querySelectorAll('input[name="target-age"]:checked').length;
+                if (checkedCount > 2) {
+                    checkbox.checked = false;
+                    saveFormData(); // 변경사항 저장
                 }
             });
         });
@@ -355,15 +376,16 @@
             e.preventDefault();
             const checkedGoals = Array.from(document.querySelectorAll('input[name="marketing-goal"]:checked')).map(cb => cb.value);
             const checkedTones = Array.from(document.querySelectorAll('input[name="gems-tone"]:checked')).map(cb => cb.value);
+            const checkedAges = Array.from(document.querySelectorAll('input[name="target-age"]:checked')).map(cb => cb.value); // 연령대 값 읽기
 
             const formData = {
                 productName: document.getElementById('product-name').value,
-                brandName: document.getElementById('brand-name').value, // 브랜드명 추가
+                brandName: document.getElementById('brand-name').value,
                 productStrengths: document.getElementById('product-strengths').value,
                 businessSchedule: document.getElementById('business-schedule').value,
                 marketingGoal: checkedGoals.length > 0 ? checkedGoals.join(', ') : '지정되지 않음',
                 gemsTone: checkedTones.length > 0 ? checkedTones.join(', ') : '친절하고 격려하는',
-                targetAge: document.getElementById('target-age').value,
+                targetAge: checkedAges.length > 0 ? checkedAges.join(', ') : '지정되지 않음', // 연령대 값 반영
                 targetGender: document.getElementById('target-gender').value,
                 targetLifestyle: document.getElementById('target-lifestyle').value,
             };
@@ -385,7 +407,8 @@
                 - 마케팅 목표: ${formData.marketingGoal}
                 - 비즈니스 주요 일정: ${formData.businessSchedule}
                 - GEMS 어투: ${formData.gemsTone}
-                - 우리의 고객: ${formData.targetAge} ${formData.targetGender}
+                - 우리의 고객 연령: ${formData.targetAge}
+                - 우리의 고객 성별: ${formData.targetGender || '지정되지 않음'}
                 - 고객 생활 모습: ${formData.targetLifestyle}
                 
                 ---
