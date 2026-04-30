@@ -588,19 +588,38 @@
                 });
 
                 const result = await response.json();
+                
+                // 에러 처리 추가: API 요청 자체가 실패했을 때 원인을 화면에 표시
+                if (!response.ok) {
+                    throw new Error(result.error?.message || `API Error: ${response.status}`);
+                }
+
                 const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
                 
                 if (text) {
-                    const parts = text.split('---[GEMS_GUIDE_START]---');
-                    plannerRawMarkdown = parts[0];
-                    gemsRawMarkdown = parts[1] || "";
+                    const separator = '---[GEMS_GUIDE_START]---';
+                    
+                    // 파싱 안전장치 추가: AI가 구분자를 빼먹었을 경우 에러 방지
+                    if (text.includes(separator)) {
+                        const parts = text.split(separator);
+                        plannerRawMarkdown = parts[0];
+                        gemsRawMarkdown = parts[1].trim() || "생성된 지침서 내용이 없습니다.";
+                    } else {
+                        // 구분자가 없는 경우 전체를 기획서 탭에 넣고 안내 메시지 출력
+                        plannerRawMarkdown = text;
+                        gemsRawMarkdown = "⚠️ AI가 지침서 구분자를 올바르게 생성하지 못했습니다.\n\n[마케팅 기획서] 탭에서 생성된 전체 결과를 확인해 주세요.";
+                    }
+                    
                     outputTabPlannerContent.innerHTML = marked.parse(plannerRawMarkdown);
                     outputTabGemsContent.innerHTML = marked.parse(gemsRawMarkdown);
                     outputContainer.classList.remove('hidden');
                     outputTabPlannerBtn.click();
+                } else {
+                    throw new Error("AI가 응답을 생성하지 못했습니다.");
                 }
             } catch (error) {
-                welcomeMessage.innerHTML = `<p class="text-red-500">오류가 발생했습니다: ${error.message}</p>`;
+                console.error("오류 발생:", error);
+                welcomeMessage.innerHTML = `<p class="text-red-500 font-bold">오류가 발생했습니다.</p><p class="text-sm mt-2 text-gray-600">${error.message}</p><p class="text-sm mt-2 text-gray-500">잠시 후 다시 시도해 주세요.</p>`;
                 welcomeMessage.style.display = 'flex';
             } finally {
                 loadingIndicator.style.display = 'none';
@@ -627,24 +646,28 @@
             const toneMap = {"1":"매우 격식있고 정중한", "2":"격식있는", "3":"자연스럽고 편안한", "4":"친근한", "5":"매우 친근하고 발랄한"};
             const toneDesc = toneMap[data.level];
 
-            const prompt = `당신은 마케팅 전문가입니다. 아래 정보를 바탕으로 [마케팅 기획서]와 [GEMS 지침서]를 작성하세요. 구분자: ---[GEMS_GUIDE_START]---
-            정보: 상품(${data.pName}), 브랜드(${data.bName}), 강점(${data.strengths}), 일정(${data.sched}), 목표(${data.goals}), 타겟(${data.ages} ${data.gender}), 라이프스타일(${data.lifestyle}), 플랫폼(${data.platforms}), 말투(${toneDesc}, ${data.tones}), 이모지(${data.emoji}).
+            const prompt = `당신은 마케팅 전문가입니다. 아래 정보를 바탕으로 [마케팅 기획서]와 [GEMS 지침서]를 작성하세요. 
 
-            [기획서 포함사항]
-            1. 시장분석 및 경쟁사 2곳 분석.
-            2. 상세 고객 페르소나 및 라이프스타일 해시태그 5개.
-            3. 핵심 가치 제안 및 Before/After 가설.
-            4. 추천 해시태그 전략 10개 조합.
+[중요] 두 결과물 사이에 반드시 아래 구분자를 한 줄만 정확하게 삽입하세요. 절대 생략하면 안 됩니다:
+---[GEMS_GUIDE_START]---
 
-            [GEMS 지침서 포함사항]
-            0. 톤앤매너: "${toneDesc}" 말투를 유지하고, ${data.emoji} 하세요. 주력 플랫폼(${data.platforms})의 특성을 반영하세요.
-            1. 고객 정의: ${data.ages} ${data.gender} 타겟에 빙의하는 "고객 시점" 명령어 포함.
-            2. 콘텐츠 기획: 5개 제안. 각 <제목>, <내용 요약>, <실행 프롬프트> 필수 포함. 영상 프롬프트는 제외.
-            3. 판매글: 인스타/블로그용 작성. 고객 혜택, 문제 해결, CTA(행동유도)를 강력히 포함할 것.
-            4. 릴스 기획: 장면별 영상 생성 프롬프트를 한글과 영문으로 병기할 것.
-            5. 프로필 피드백: 고객이 "신뢰"를 느낄 수 있는 포인트를 명확히 표현할 것.
-            6. 스마트스토어 리뷰 분석: [리뷰 데이터] + "리뷰 분석" 요청 시 (강점/보완점, 가치제안, 해시태그, 상세페이지 추가내용, 콘텐츠 제목 10개, 이벤트 5개)를 고객 입장에서 구성할 것.
-            7. 기타: 팔로워 발굴, 답변 추천, 광고 문구 등 기존 기능 모두 포함하여 27번까지 누락없이 작성할 것.`;
+정보: 상품(${data.pName}), 브랜드(${data.bName}), 강점(${data.strengths}), 일정(${data.sched}), 목표(${data.goals}), 타겟(${data.ages} ${data.gender}), 라이프스타일(${data.lifestyle}), 플랫폼(${data.platforms}), 말투(${toneDesc}, ${data.tones}), 이모지(${data.emoji}).
+
+[기획서 포함사항]
+1. 시장분석 및 경쟁사 2곳 분석.
+2. 상세 고객 페르소나 및 라이프스타일 해시태그 5개.
+3. 핵심 가치 제안 및 Before/After 가설.
+4. 추천 해시태그 전략 10개 조합.
+
+[GEMS 지침서 포함사항] (아래 내용을 참고하여 GEMS 지침서 형식을 상세히 작성하세요)
+0. 톤앤매너: "${toneDesc}" 말투를 유지하고, ${data.emoji} 하세요. 주력 플랫폼(${data.platforms})의 특성을 반영하세요.
+1. 고객 정의: ${data.ages} ${data.gender} 타겟에 빙의하는 "고객 시점" 명령어 포함.
+2. 콘텐츠 기획: 5개 제안. 각 <제목>, <내용 요약>, <실행 프롬프트> 필수 포함. 영상 프롬프트는 제외.
+3. 판매글: 인스타/블로그용 작성. 고객 혜택, 문제 해결, CTA(행동유도)를 강력히 포함할 것.
+4. 릴스 기획: 장면별 영상 생성 프롬프트를 한글과 영문으로 병기할 것.
+5. 프로필 피드백: 고객이 "신뢰"를 느낄 수 있는 포인트를 명확히 표현할 것.
+6. 스마트스토어 리뷰 분석: [리뷰 데이터] + "리뷰 분석" 요청 시 (강점/보완점, 가치제안, 해시태그, 상세페이지 추가내용, 콘텐츠 제목 10개, 이벤트 5개)를 고객 입장에서 구성할 것.
+7. 기타: 팔로워 발굴, 답변 추천, 광고 문구 등 기존 기능 모두 포함하여 27번까지 누락없이 구체적인 지시문을 작성할 것.`;
 
             generateContent(prompt);
         });
