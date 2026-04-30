@@ -592,8 +592,9 @@
             loadingIndicator.style.display = 'flex';
 
             try {
-                // 이 환경에 맞춰 모델명 고정 및 불필요한 API 키 검증 로직 제거
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+                // API 키 유무에 따라 Canvas 내부 전용 모델과 외부 정식 모델을 자동 스위칭합니다.
+                const targetModel = apiKey.trim() === "" ? "gemini-2.5-flash-preview-09-2025" : "gemini-2.5-flash";
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/${targetModel}:generateContent?key=${apiKey}`;
                 
                 const options = {
                     method: 'POST',
